@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <title>DRISHTI — HAL TPE331-12B Inspection System</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     LOGIN PAGE
+═══════════════════════════════════════════════ -->
+<div class="page active" id="pg-login">
+  <div class="login-hero">
+    <div class="login-emblem">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="31" stroke="rgba(56,140,255,0.35)" stroke-width="1.5"/>
+        <circle cx="32" cy="32" r="22" stroke="rgba(56,140,255,0.25)" stroke-width="1"/>
+        <circle cx="32" cy="32" r="12" stroke="#378ADD" stroke-width="1.5"/>
+        <circle cx="32" cy="32" r="5" fill="#378ADD"/>
+        <line x1="32" y1="1" x2="32" y2="20" stroke="#378ADD" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="32" y1="44" x2="32" y2="63" stroke="#378ADD" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="1"  y1="32" x2="20" y2="32" stroke="#378ADD" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="44" y1="32" x2="63" y2="32" stroke="#378ADD" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="login-logo">DRISHTI</div>
+    <div class="login-tag">DPSU-driven Research &amp; Innovation for<br>Strategic &amp; High-impact Technology Integration</div>
+
+    <div class="login-badge">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M7 1L2 3.5v4C2 10.5 4.5 12.8 7 13c2.5-.2 5-2.5 5-5.5v-4L7 1z"
+              stroke="#7ec8ff" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M5 7l1.5 1.5L9 5.5" stroke="#7ec8ff" stroke-width="1.2"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Secure HAL · Defence Network Access
+    </div>
+
+    <form class="lform" onsubmit="doLogin(event)">
+      <div class="lfield">
+        <label>Service ID / Employee No.</label>
+        <input type="text" id="uid" placeholder="HAL-XXXXX" autocomplete="username" required/>
+      </div>
+      <div class="lfield">
+        <label>Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="pwd" placeholder="••••••••"
+                 autocomplete="current-password" required style="padding-right:36px"/>
+          <div class="eye" id="eye-tog" onclick="togglePwd()">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <ellipse cx="7" cy="7" rx="5.5" ry="3.5" stroke="currentColor" stroke-width="1.2"/>
+              <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="login-opts">
+        <label class="remember"><input type="checkbox" id="rememberMe" checked/> Remember device</label>
+        <div class="forgot" onclick="alert('Contact your HAL Security Officer to reset password.')">Forgot password?</div>
+      </div>
+      <button type="submit" class="btn-login">Sign In</button>
+      <div class="divider">or authenticate with</div>
+      <button type="button" class="bio-btn" onclick="doLogin(null, true)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="5" r="3" stroke="#4de8a0" stroke-width="1.3"/>
+          <path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#4de8a0" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+        Biometric / Smart Card
+      </button>
+    </form>
+    <div class="signup-link">New personnel? <span onclick="alert('Contact your HAL Security Officer to request DRISHTI access.')">Request access ↗</span></div>
+  </div>
+  <div class="login-footer">HAL · SM-Q Test House · v2.4.1 · MIL-SPEC ENCRYPTED</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     MAIN APP SHELL
+═══════════════════════════════════════════════ -->
+<div class="page" id="pg-app">
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div>
+      <div class="logo">DRISHTI</div>
+      <div class="logo-sub">TPE331-12B · HTT-40</div>
+    </div>
+    <div class="tbr">
+      <div class="notif-btn" onclick="openNotif()" id="nb">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 1a5 5 0 015 5c0 2.8-1 4.6-2 5.5H5c-1-.9-2-2.7-2-5.5a5 5 0 015-5z"
+                stroke="rgba(126,200,255,0.7)" stroke-width="1.3"/>
+          <path d="M6.5 12a1.5 1.5 0 003 0" stroke="rgba(126,200,255,0.7)" stroke-width="1.2"/>
+        </svg>
+        <div class="nbadge" id="nbadge">4</div>
+      </div>
+      <div class="avt" id="user-avt" onclick="goPage('pg-settings')">SK</div>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content" id="carea">
+
+    <!-- HOME -->
+    <div class="screen active" id="s-home">
+      <div class="live-row">
+        <div class="live-label"><span class="dot-live"></span>Live · Bay 3</div>
+        <span class="pill pa">3 pending</span>
+      </div>
+      <div class="metrics-grid">
+        <div class="mc"><div class="ml">Inspections</div><div class="mv b" id="stat-insp">12</div><div class="md">+3 today</div></div>
+        <div class="mc"><div class="ml">Defects</div><div class="mv a" id="stat-def">4</div><div class="md">2 critical</div></div>
+        <div class="mc"><div class="ml">ECL done</div><div class="mv g" id="stat-ecl">87%</div><div class="md">13 / 15</div></div>
+        <div class="mc"><div class="ml">FOD alerts</div><div class="mv r" id="stat-fod">1</div><div class="md">Bay 3 active</div></div>
+      </div>
+      <div class="sl">Active alerts</div>
+      <div class="as ad"><svg class="ai" viewBox="0 0 14 14" fill="none"><path d="M7 1L1 13h12L7 1z" stroke="#ff5e5e" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 5v4M7 10v1" stroke="#ff5e5e" stroke-width="1.2" stroke-linecap="round"/></svg><div><div class="at" style="color:#ff5e5e">FOD detected — Bay 3</div><div class="asb">TPE-331-0029 · Compressor inlet · 14:32</div></div></div>
+      <div class="as aw"><svg class="ai" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#f5c347" stroke-width="1.2"/><path d="M7 4.5v3M7 9v1" stroke="#f5c347" stroke-width="1.2" stroke-linecap="round"/></svg><div><div class="at" style="color:#f5c347">3 ECL sign-offs pending</div><div class="asb">IND-2024-088 · Due 17:00</div></div></div>
+      <div class="as ai-s"><svg class="ai" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#7ec8ff" stroke-width="1.2"/><path d="M7 6v4M7 4v1" stroke="#7ec8ff" stroke-width="1.2" stroke-linecap="round"/></svg><div><div class="at" style="color:#7ec8ff">AI model v3.2 live</div><div class="asb">Blade crack detection +12% accuracy</div></div></div>
+      <div class="sl">Throughput — this week</div>
+      <div class="card p12">
+        <div class="br"><div class="bl">Mon</div><div class="bt"><div class="bf bbl" style="width:80%"></div></div><div class="bn">16</div></div>
+        <div class="br"><div class="bl">Tue</div><div class="bt"><div class="bf bbl" style="width:55%"></div></div><div class="bn">11</div></div>
+        <div class="br"><div class="bl">Wed</div><div class="bt"><div class="bf bbl" style="width:70%"></div></div><div class="bn">14</div></div>
+        <div class="br"><div class="bl">Thu</div><div class="bt"><div class="bf bbl" style="width:90%"></div></div><div class="bn">18</div></div>
+        <div class="br mb0"><div class="bl">Today</div><div class="bt"><div class="bf bba" style="width:60%"></div></div><div class="bn">12</div></div>
+      </div>
+      <div class="sl">Recent inspections</div>
+      <div class="card" id="recent-list">
+        <div class="ri"><div><div><span class="sn">TPE-331-0042</span></div><div class="rsub">Cdr. Mehta · Induction</div></div><span class="pill pg">Clear</span></div>
+        <div class="ri"><div><div><span class="sn">TPE-331-0038</span></div><div class="rsub">Sgt. Rao · Visual AI</div></div><span class="pill pa">Review</span></div>
+        <div class="ri"><div><div><span class="sn">TPE-331-0029</span></div><div class="rsub">Lt. Sharma · Dispatch</div></div><span class="pill pr">FOD Hold</span></div>
+        <div class="ri nobb"><div><div><span class="sn">TPE-331-0055</span></div><div class="rsub">Sgt. Patil · Induction</div></div><span class="pill pb">In Progress</span></div>
+      </div>
+    </div>
+
+    <!-- INSPECT -->
+    <div class="screen" id="s-inspect">
+      <div class="sl">New inspection</div>
+      <div class="card p14">
+        <div class="fr">
+          <div class="fg"><label>Engine S/N</label><input type="text" placeholder="TPE-331-XXXX" id="esn"/></div>
+          <div class="fg"><label>Aircraft</label><input type="text" placeholder="Z-3XXX"/></div>
+        </div>
+        <div class="fr">
+          <div class="fg"><label>Stage</label>
+            <select><option>Induction</option><option>Visual AI</option><option>ECL Check</option><option>Dispatch</option></select>
+          </div>
+          <div class="fg"><label>Inspector</label>
+            <select><option>Cdr. Mehta</option><option>Sgt. Rao</option><option>Lt. Sharma</option><option>Sgt. Patil</option></select>
+          </div>
+        </div>
+        <div class="fg"><label>Notes</label><textarea placeholder="Pre-inspection observations..."></textarea></div>
+        <button class="btn-p" onclick="startScan()">Launch AI Inspection</button>
+      </div>
+      <div class="sl">AI visual scanner</div>
+      <div class="card p14">
+        <div class="scan-area" id="scan-box">
+          <div class="sc tl"></div><div class="sc tr"></div><div class="sc bl"></div><div class="sc br"></div>
+          <div class="scan-line"></div>
+          <div class="scan-lbl" id="sstat">AWAITING ENGINE S/N</div>
+        </div>
+        <div id="ai-results">
+          <div class="ar"><div class="ci ci-p"></div><div class="ar-lbl">Compressor inlet</div><span class="ar-conf">—</span></div>
+          <div class="ar"><div class="ci ci-p"></div><div class="ar-lbl">Turbine blades</div><span class="ar-conf">—</span></div>
+          <div class="ar"><div class="ci ci-p"></div><div class="ar-lbl">Combustion chamber</div><span class="ar-conf">—</span></div>
+          <div class="ar"><div class="ci ci-p"></div><div class="ar-lbl">Accessory serials (OCR)</div><span class="ar-conf">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ECL -->
+    <div class="screen" id="s-ecl">
+      <div class="sl">Batch IND-2024-088</div>
+      <div class="card p14">
+        <div class="ecl-head"><div class="ecl-lbl">ECL completion</div><span class="pill pa">11 / 15</span></div>
+        <div class="pt"><div class="pf" style="width:73%"></div></div>
+        <div class="ecl-due">Deadline: 17:00 today</div>
+      </div>
+      <div class="card">
+        <div class="ct">Checklist</div>
+        <div class="clr"><div class="ci ci-d"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5L8 3" stroke="#4de8a0" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg></div><div><div class="cn">Engine config card</div><div class="cs">Verified 08:12</div></div><span class="pill pg">Done</span></div>
+        <div class="clr"><div class="ci ci-d"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5L8 3" stroke="#4de8a0" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg></div><div><div class="cn">Compressor blade count</div><div class="cs">AI verified 08:19</div></div><span class="pill pg">Done</span></div>
+        <div class="clr"><div class="ci ci-d"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5L8 3" stroke="#4de8a0" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg></div><div><div class="cn">Fuel control S/N</div><div class="cs">OCR matched 08:31</div></div><span class="pill pg">Done</span></div>
+        <div class="clr"><div class="ci ci-w"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M5 3v3M5 7.5v.5" stroke="#f5c347" stroke-width="1.4" stroke-linecap="round"/></svg></div><div><div class="cn">Exhaust nozzle check</div><div class="cs">Awaiting Cdr. Mehta</div></div><span class="pill pa">Pending</span></div>
+        <div class="clr"><div class="ci ci-w"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M5 3v3M5 7.5v.5" stroke="#f5c347" stroke-width="1.4" stroke-linecap="round"/></svg></div><div><div class="cn">Oil system pressure</div><div class="cs">Test in progress</div></div><span class="pill pa">Pending</span></div>
+        <div class="clr nobb"><div class="ci ci-f"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3 3l4 4M7 3l-4 4" stroke="#ff5e5e" stroke-width="1.4" stroke-linecap="round"/></svg></div><div><div class="cn">Inlet particle separator</div><div class="cs">FOD hold — blocked</div></div><span class="pill pr">Hold</span></div>
+      </div>
+    </div>
+
+    <!-- DEFECTS -->
+    <div class="screen" id="s-defects">
+      <div class="metrics-grid">
+        <div class="mc"><div class="ml">Open</div><div class="mv r">7</div></div>
+        <div class="mc"><div class="ml">Critical</div><div class="mv r">2</div></div>
+        <div class="mc"><div class="ml">Repair</div><div class="mv a">3</div></div>
+        <div class="mc"><div class="ml">Closed</div><div class="mv g">12</div></div>
+      </div>
+      <div class="sl">Defect register</div>
+      <div class="card" id="defect-list">
+        <div class="defect-row">
+          <div class="dr-top"><span class="sn">TPE-331-0029</span><span class="pill pr">Critical</span></div>
+          <div class="dr-desc">Compressor inlet · FOD debris</div>
+          <div class="dr-bot"><span class="dr-meta">AI Vision · DEF-0091</span><button class="btn-s" onclick="loadGuide('fod-compressor')">Guide ↗</button></div>
+        </div>
+        <div class="defect-row">
+          <div class="dr-top"><span class="sn">TPE-331-0038</span><span class="pill pa">Moderate</span></div>
+          <div class="dr-desc">Fuel control unit · Serial gap</div>
+          <div class="dr-bot"><span class="dr-meta">OCR scan · DEF-0090</span><button class="btn-s" onclick="loadGuide('serial-gap')">Guide ↗</button></div>
+        </div>
+        <div class="defect-row nobb">
+          <div class="dr-top"><span class="sn">TPE-331-0021</span><span class="pill pr">Critical</span></div>
+          <div class="dr-desc">Stage-2 turbine · Blade crack</div>
+          <div class="dr-bot"><span class="dr-meta">AI Vision · DEF-0088</span><button class="btn-s" onclick="loadGuide('blade-crack')">Guide ↗</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORTS -->
+    <div class="screen" id="s-reports">
+      <div class="sl">Generate reports</div>
+      <div class="rcard" onclick="generateReport('weekly')">
+        <div class="ri2"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="2" width="10" height="12" rx="1.5" stroke="#7ec8ff" stroke-width="1.2"/><path d="M5 6h6M5 8.5h6M5 11h4" stroke="#7ec8ff" stroke-width="1.1" stroke-linecap="round"/></svg></div>
+        <div><div class="rt">Weekly summary</div><div class="rsb2">Inspections, defects, ECL</div></div><div class="ra">›</div>
+      </div>
+      <div class="rcard" onclick="generateReport('fod')">
+        <div class="ri2"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L1 14h14L8 2z" stroke="#ff5e5e" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 6v4M8 11v1" stroke="#ff5e5e" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div><div class="rt">FOD incident report</div><div class="rsb2">Root cause, actions taken</div></div><div class="ra">›</div>
+      </div>
+      <div class="rcard" onclick="generateReport('ecl')">
+        <div class="ri2"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#4de8a0" stroke-width="1.2"/><path d="M5.5 8l2 2L10.5 6" stroke="#4de8a0" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="rt">ECL compliance</div><div class="rsb2">Delays, audit trail</div></div><div class="ra">›</div>
+      </div>
+      <div class="rcard" onclick="generateReport('dispatch')">
+        <div class="ri2"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M8 3l5 5-5 5" stroke="#f5c347" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><div class="rt">Dispatch certificate</div><div class="rsb2">Engine clearance document</div></div><div class="ra">›</div>
+      </div>
+      <div class="sl">Recent exports</div>
+      <div class="card">
+        <div class="ri"><div><div class="rsm">Weekly summary W17</div><div class="rsub">27 Apr · Lt. Sharma</div></div><div class="ri-right"><span class="pill pgr">PDF</span><button class="btn-s">↓</button></div></div>
+        <div class="ri"><div><div class="rsm">FOD incident Apr 2026</div><div class="rsub">25 Apr · Cdr. Mehta</div></div><div class="ri-right"><span class="pill pgr">PDF</span><button class="btn-s">↓</button></div></div>
+        <div class="ri nobb"><div><div class="rsm">ECL compliance IND-085</div><div class="rsub">22 Apr · Sgt. Rao</div></div><div class="ri-right"><span class="pill pgr">XLSX</span><button class="btn-s">↓</button></div></div>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+
+  <!-- Bottom Nav -->
+  <div class="bnav">
+    <div class="nt active" onclick="sw('home',this)"><svg viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="7" height="7" rx="1.5" fill="currentColor" opacity=".7"/><rect x="10" y="1" width="7" height="7" rx="1.5" fill="currentColor" opacity=".7"/><rect x="1" y="10" width="7" height="7" rx="1.5" fill="currentColor" opacity=".4"/><rect x="10" y="10" width="7" height="7" rx="1.5" fill="currentColor" opacity=".4"/></svg>Home</div>
+    <div class="nt" onclick="sw('inspect',this)"><svg viewBox="0 0 18 18" fill="none"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M6 8h4M8 6v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>Inspect</div>
+    <div class="nt" onclick="sw('ecl',this)"><svg viewBox="0 0 18 18" fill="none"><rect x="3" y="2" width="12" height="14" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M6 6h6M6 9h6M6 12h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>ECL</div>
+    <div class="nt" onclick="sw('defects',this)"><svg viewBox="0 0 18 18" fill="none"><path d="M9 2L2 16h14L9 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 7v5M9 13v1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Defects</div>
+    <div class="nt" onclick="sw('reports',this)"><svg viewBox="0 0 18 18" fill="none"><path d="M2 13L6 10l3 2 3-4 4 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Reports</div>
+  </div>
+
+  <!-- Notification Panel -->
+  <div class="notif-panel" id="npanel" style="display:none">
+    <div class="notif-scrim" onclick="closeNotif()"></div>
+    <div class="notif-drawer">
+      <div class="nd-header">
+        <div class="nd-title">Notifications</div>
+        <div class="nd-close" onclick="closeNotif()">✕</div>
+      </div>
+      <div class="nd-tabs">
+        <div class="nd-tab act" onclick="filterNotif('all',this)">All (4)</div>
+        <div class="nd-tab" onclick="filterNotif('alerts',this)">Alerts</div>
+        <div class="nd-tab" onclick="filterNotif('system',this)">System</div>
+      </div>
+      <div class="notif-list" id="nlist">
+        <div class="ni unread" data-cat="alerts">
+          <div class="ni-icon ni-danger"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L1 13h12L7 1z" stroke="#ff5e5e" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+          <div class="ni-body"><div class="ni-title">FOD detected — Bay 3</div><div class="ni-sub">Metallic debris near compressor inlet on TPE-331-0029. Engine on hold.</div><div class="ni-time">14:32 · Today</div></div>
+          <div class="ni-dot"></div>
+        </div>
+        <div class="ni unread" data-cat="alerts">
+          <div class="ni-icon ni-warn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#f5c347" stroke-width="1.2"/><path d="M7 4.5v3M7 9v1" stroke="#f5c347" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+          <div class="ni-body"><div class="ni-title">3 ECL items pending sign-off</div><div class="ni-sub">IND-2024-088 · Deadline 17:00 today.</div><div class="ni-time">13:15 · Today</div></div>
+          <div class="ni-dot"></div>
+        </div>
+        <div class="ni unread" data-cat="alerts">
+          <div class="ni-icon ni-warn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#f5c347" stroke-width="1.2"/></svg></div>
+          <div class="ni-body"><div class="ni-title">Serial mismatch — TPE-331-0038</div><div class="ni-sub">Fuel control unit tag unreadable. AR rescan required.</div><div class="ni-time">11:48 · Today</div></div>
+          <div class="ni-dot"></div>
+        </div>
+        <div class="ni unread" data-cat="system">
+          <div class="ni-icon ni-info"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#7ec8ff" stroke-width="1.2"/></svg></div>
+          <div class="ni-body"><div class="ni-title">AI model updated to v3.2</div><div class="ni-sub">Blade crack detection +12% accuracy.</div><div class="ni-time">09:00 · Today</div></div>
+          <div class="ni-dot"></div>
+        </div>
+      </div>
+      <div class="nd-mark" onclick="markAllRead()">Mark all as read</div>
+    </div>
+  </div>
+
+</div><!-- end pg-app -->
+
+<!-- ═══════════════════════════════════════════════
+     SETTINGS PAGE
+═══════════════════════════════════════════════ -->
+<div class="page" id="pg-settings">
+  <div class="sub-header">
+    <div class="back-btn" onclick="goPage('pg-app')">‹</div>
+    <div class="sub-title">Settings</div>
+    <span class="pill pg" style="margin-left:auto">Clearance L3</span>
+  </div>
+  <div class="content">
+    <div class="profile-hero">
+      <div class="avt-lg" id="settings-avt">SK</div>
+      <div>
+        <div class="p-name" id="settings-name">Sandip Kumar Burnwal</div>
+        <div class="p-role">SM-Q Test House · Quality Engineer</div>
+        <div class="p-id">HAL-04281</div>
+      </div>
+    </div>
+    <div class="sec-score">
+      <div class="score-ring"><div class="score-val">94</div></div>
+      <div><div class="score-title">Security score: Excellent</div><div class="score-sub">Biometric · PIN · MFA · Session 1d</div></div>
+    </div>
+    <div class="sl">Security</div>
+    <div class="card">
+      <div class="srow" onclick="goPage('pg-security')"><div class="sicon si-red"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L2 4v5c0 3.3 2.5 5.8 6 6 3.5-.2 6-2.7 6-6V4L8 1z" stroke="#ff5e5e" stroke-width="1.2" stroke-linejoin="round"/></svg></div><div class="sbody"><div class="stitle">Security controls</div><div class="ssub">PIN, biometrics, MFA, lock timer</div></div><div class="sarrow">›</div></div>
+      <div class="srow" onclick="goPage('pg-sessions')"><div class="sicon si-amber"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="2" stroke="#f5c347" stroke-width="1.2"/></svg></div><div class="sbody"><div class="stitle">Active sessions</div><div class="ssub">2 devices logged in</div></div><span class="pill pa" style="margin-right:6px">2</span><div class="sarrow">›</div></div>
+      <div class="srow" onclick="goPage('pg-audit')"><div class="sicon si-purple"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 4h10M3 7h8M3 10h6M3 13h4" stroke="#a0a0ff" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="sbody"><div class="stitle">Audit log</div><div class="ssub">All access &amp; change history</div></div><div class="sarrow">›</div></div>
+    </div>
+    <div class="sl">Application</div>
+    <div class="card">
+      <div class="srow"><div class="sicon si-blue"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1a5 5 0 015 5c0 2.8-1 4.6-2 5.5H5c-1-.9-2-2.7-2-5.5a5 5 0 015-5z" stroke="#7ec8ff" stroke-width="1.2"/></svg></div><div class="sbody"><div class="stitle">Notifications</div><div class="ssub">FOD, ECL, system alerts</div></div><div class="stoggle on" onclick="tog(this)"><div class="tog-dot"></div></div></div>
+      <div class="srow"><div class="sicon si-gray"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" stroke="rgba(140,180,220,0.7)" stroke-width="1.2"/><path d="M8 2v1M8 13v1M2 8h1M13 8h1" stroke="rgba(140,180,220,0.7)" stroke-width="1.1" stroke-linecap="round"/></svg></div><div class="sbody"><div class="stitle">Display &amp; language</div><div class="ssub">Theme, units, locale</div></div><div class="sarrow">›</div></div>
+      <div class="srow"><div class="sicon si-green"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 3a7 7 0 11-4-2" stroke="#4de8a0" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="sbody"><div class="stitle">Data sync</div><div class="ssub">Last sync: 28 Apr 23:58</div></div><span class="pill pg" style="margin-right:6px">On</span><div class="sarrow">›</div></div>
+    </div>
+    <div class="sl">Danger zone</div>
+    <div class="danger-zone">
+      <div class="dz-header">RESTRICTED — REQUIRES RE-AUTHENTICATION</div>
+      <div class="dz-row" onclick="showModal('lock')"><div class="sicon si-amber"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="4" y="7" width="8" height="7" rx="1.5" stroke="#f5c347" stroke-width="1.2"/><path d="M5.5 7V5.5a2.5 2.5 0 015 0V7" stroke="#f5c347" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="sbody"><div class="dz-title">Lock account immediately</div><div class="dz-sub">Terminates all active sessions</div></div></div>
+      <div class="dz-row" onclick="showModal('revoke')"><div class="sicon si-red"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="#ff5e5e" stroke-width="1.3" stroke-linecap="round"/></svg></div><div class="sbody"><div class="dz-title">Revoke all access tokens</div><div class="dz-sub">Forces re-auth on all devices</div></div></div>
+      <div class="dz-row" onclick="showModal('wipe')"><div class="sicon si-red"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="#ff5e5e" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="8" r="6" stroke="#ff5e5e" stroke-width="1.2"/></svg></div><div class="sbody"><div class="dz-title">Remote wipe local data</div><div class="dz-sub">Permanently erases cached data</div></div></div>
+    </div>
+    <button class="btn-logout" onclick="doLogout()">Sign out</button>
+  </div>
+</div>
+
+<!-- SECURITY SUB-PAGE -->
+<div class="page" id="pg-security">
+  <div class="sub-header"><div class="back-btn" onclick="goPage('pg-settings')">‹</div><div class="sub-title">Security controls</div></div>
+  <div class="content">
+    <div class="sl">Authentication</div>
+    <div class="card">
+      <div class="srow"><div class="sicon si-green"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.5" stroke="#4de8a0" stroke-width="1.2"/><path d="M3 13c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="#4de8a0" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="sbody"><div class="stitle">Biometric unlock</div><div class="ssub">Face ID / Fingerprint</div></div><div class="stoggle on" onclick="tog(this)"><div class="tog-dot"></div></div></div>
+      <div class="srow"><div class="sicon si-blue"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="4" y="7" width="8" height="7" rx="1.5" stroke="#7ec8ff" stroke-width="1.2"/><path d="M5.5 7V5.5a2.5 2.5 0 015 0V7" stroke="#7ec8ff" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="sbody"><div class="stitle">6-digit secure PIN</div><div class="ssub">Last changed: 14 Apr 2026</div></div><span class="pill pg" style="margin-right:6px">Active</span><div class="sarrow">›</div></div>
+      <div class="srow"><div class="sicon si-purple"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="1.5" stroke="#a0a0ff" stroke-width="1.2"/></svg></div><div class="sbody"><div class="stitle">Multi-factor auth (MFA)</div><div class="ssub">SMS + authenticator app</div></div><div class="stoggle on" onclick="tog(this)"><div class="tog-dot"></div></div></div>
+      <div class="srow"><div class="sicon si-red"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#ff5e5e" stroke-width="1.2"/><path d="M8 5v4M8 10.5v1" stroke="#ff5e5e" stroke-width="1.3" stroke-linecap="round"/></svg></div><div class="sbody"><div class="stitle">Intruder alert (5 fails)</div><div class="ssub">Auto-lock + notify admin</div></div><div class="stoggle on" onclick="tog(this)"><div class="tog-dot"></div></div></div>
+    </div>
+    <div class="sl">Session security</div>
+    <div class="card">
+      <div class="srow"><div class="sicon si-amber"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#f5c347" stroke-width="1.2"/><path d="M8 5v3l2 2" stroke="#f5c347" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="sbody"><div class="stitle">Auto-lock timer</div></div><select class="sel-sm"><option>5 min</option><option selected>10 min</option><option>30 min</option></select></div>
+      <div class="srow"><div class="sicon si-gray"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="8" rx="1.5" stroke="rgba(140,180,220,0.7)" stroke-width="1.2"/></svg></div><div class="sbody"><div class="stitle">AES-256-GCM encryption</div><div class="ssub">All data end-to-end encrypted</div></div><span class="pill pg">Always on</span></div>
+      <div class="srow"><div class="sicon si-green"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#4de8a0" stroke-width="1.2"/><path d="M5.5 8l2 2L10.5 6" stroke="#4de8a0" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="sbody"><div class="stitle">VPN enforcement</div><div class="ssub">Block access outside HAL VPN</div></div><div class="stoggle on" onclick="tog(this)"><div class="tog-dot"></div></div></div>
+      <div class="srow"><div class="sicon si-gray"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="rgba(140,180,220,0.7)" stroke-width="1.2"/></svg></div><div class="sbody"><div class="stitle">Screenshot prevention</div><div class="ssub">Block screen capture in-app</div></div><div class="stoggle on" onclick="tog(this)"><div class="tog-dot"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SESSIONS SUB-PAGE -->
+<div class="page" id="pg-sessions">
+  <div class="sub-header"><div class="back-btn" onclick="goPage('pg-settings')">‹</div><div class="sub-title">Active sessions</div><span class="pill pa" style="margin-left:auto">2 active</span></div>
+  <div class="content">
+    <div class="sl">This device</div>
+    <div class="card">
+      <div class="session-item"><div class="dev-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="#7ec8ff" stroke-width="1.2"/></svg></div><div style="flex:1"><div class="dev-name">HAL Tablet · Bay 3</div><div class="dev-sub">Android 14 · 192.168.10.44 · Now</div></div><span class="dev-this">This device</span></div>
+    </div>
+    <div class="sl">Other sessions</div>
+    <div class="card">
+      <div class="session-item"><div class="dev-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="11" rx="1.5" stroke="#f5c347" stroke-width="1.2"/></svg></div><div style="flex:1"><div class="dev-name">HAL Workstation · SM-Q Lab</div><div class="dev-sub">Windows 11 · 192.168.1.18 · 2h ago</div></div><button class="dev-kill" onclick="showModal('kill-session')">Terminate</button></div>
+    </div>
+    <div class="sl">Blocked attempts</div>
+    <div class="card">
+      <div class="session-item"><div class="dev-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#ff5e5e" stroke-width="1.2"/><path d="M5 5l6 6M11 5l-6 6" stroke="#ff5e5e" stroke-width="1.2" stroke-linecap="round"/></svg></div><div style="flex:1"><div class="dev-name" style="color:#ff8080">Unknown device — blocked</div><div class="dev-sub">IP: 203.0.113.42 · Outside VPN · 07:14</div></div><button class="dev-kill">Report</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- AUDIT LOG SUB-PAGE -->
+<div class="page" id="pg-audit">
+  <div class="sub-header"><div class="back-btn" onclick="goPage('pg-settings')">‹</div><div class="sub-title">Audit log</div><span class="pill pb" style="margin-left:auto">Immutable</span></div>
+  <div class="content">
+    <div class="audit-notice">All events are cryptographically signed and write-only. Retained 7 years per DPSU policy.</div>
+    <div class="card">
+      <div class="audit-row"><div class="audit-dot ad-green"></div><div class="audit-body"><div class="audit-title">Login successful</div><div class="audit-sub">HAL Tablet · Biometric auth</div></div><div class="audit-time">09:41</div></div>
+      <div class="audit-row"><div class="audit-dot ad-green"></div><div class="audit-body"><div class="audit-title">Inspection created</div><div class="audit-sub">TPE-331-0042 · Induction</div></div><div class="audit-time">09:52</div></div>
+      <div class="audit-row"><div class="audit-dot ad-amber"></div><div class="audit-body"><div class="audit-title">ECL item modified</div><div class="audit-sub">Exhaust nozzle → Pending</div></div><div class="audit-time">13:02</div></div>
+      <div class="audit-row"><div class="audit-dot ad-red"></div><div class="audit-body"><div class="audit-title">FOD alert raised</div><div class="audit-sub">TPE-331-0029 · Bay 3</div></div><div class="audit-time">14:32</div></div>
+      <div class="audit-row"><div class="audit-dot ad-red"></div><div class="audit-body"><div class="audit-title">Unauthorised access blocked</div><div class="audit-sub">IP 203.0.113.42 · Outside VPN</div></div><div class="audit-time">07:14 yest.</div></div>
+      <div class="audit-row nobb"><div class="audit-dot ad-blue"></div><div class="audit-body"><div class="audit-title">Report exported</div><div class="audit-sub">Weekly summary W17 — PDF</div></div><div class="audit-time">27 Apr</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-wrap" id="modal" style="display:none">
+  <div class="modal-box">
+    <div class="modal-title" id="m-title">Confirm action</div>
+    <div class="modal-sub" id="m-sub">This action requires re-authentication.</div>
+    <input class="modal-input" type="password" placeholder="Enter your PIN or password" id="m-pin"/>
+    <div class="modal-row">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-confirm-red" id="m-confirm" onclick="closeModal()">Confirm</button>
+    </div>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
